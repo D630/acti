@@ -1,0 +1,106 @@
+#!/usr/bin/env bash
+
+#config_file=$HOME/.acti/acti.config
+version="0.8.0"
+
+_main() {
+    while true
+    do
+        case "$1" in
+
+            -e|-E)
+                    if [[ "$2" =~ .+,.+,.+,+ ]]
+                    then
+                        geo="$2"
+                        shift 2
+                        continue
+                    else
+                        _status 27 2
+                    fi
+                    ;;
+
+            -m|-M)
+                    if [[ "$(cut -d " " -f2- <<< "$*")" =~ (-gv|-gh|-m) ]]
+                    then
+                        _status 27 2
+                    else
+                        shift 1
+                        w_action="maximize"
+                        continue
+                    fi
+                    ;;
+            -gv|-GV)
+                    if [[ "$(cut -d " " -f2- <<< "$*")" =~ (-gv|-gh|-m) ]]
+                    then
+                        _status 27 2
+                    else
+                        shift 1
+                        w_action="grid_vertical"
+                        continue
+                    fi
+                    ;;
+            -gh|-GH)
+                    if [[ "$(cut -d " " -f2- <<< "$*")" =~ (-gv|-gh|-m) ]]
+                    then
+                        _status 27 2
+                    else
+                        shift 1
+                        w_action="grid_horizontal"
+                        continue
+                    fi
+                    ;;
+            --gui|--GUI)
+                    shift 1
+                    modus="gui"
+                    continue
+                    ;;
+            *)
+                    break
+                    ;;
+        esac
+    done
+
+    if [ -n "$modus" ] && [ "$modus" = "gui" ]
+    then
+        _check_files
+        _check_dirs
+        _selection_modus_gui_sel_1
+        while [ -n "$app" ]
+        do
+            _selection_modus_gui
+            _check_files
+            _check_dirs
+            _selection_modus_gui_sel_1
+        done
+        unset -v modus
+        _status 04 2
+    else
+        modus="cli"
+        _check_files
+        _check_dirs
+        _selection_modus_cli "$@"
+    fi
+}
+
+if [ -z "$config_file" ]
+then
+    { echo "22: Config File is unset!" >&2 ; exit 22 ; }
+elif [ ! -f "$config_file" ]
+then
+    { echo "20: There is no Config File!" >&2 ; exit 20 ; }
+elif [ "$(stat -c %s "$config_file" 2>/dev/null)" -lt 2 ]
+then
+    { echo "21: Empty Config File exists!" >&2 ; exit 21 ; }
+else
+    source "$config_file"
+    if [ -z "$utils_dir" ]
+    then
+        { echo "23: Utils Dir is unset!" >&2 ; exit 23 ; }
+    elif [ ! -d "$utils_dir" ]
+    then
+        { echo "24: There is no Utils Dir!" >&2 ; exit 24 ; }
+    else
+        source ${utils_dir}/acti_config.sh
+        _main "$@"
+    fi
+fi

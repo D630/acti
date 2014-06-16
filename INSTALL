@@ -1,0 +1,9 @@
+1. untar acti_x.x.x.tar.gz and mv files to $HOME/.acti/ or elsewhere
+2. gzip acti.1 and cp it to /usr/share/man/man1/acti.1
+3. configure parameters in acti.config (see file in dir ./examples)
+4. set $config_file in acti (line 3)
+5. make acti executable and cp it to /usr/local/bin or $HOME/bin
+6. set dir ./utils in acti.config and scripts in that dir executable
+7. if you like it, configure a shortcut that executes acti (for example win+v)
+8. create your app file and insert minimum one app
+9. then go

@@ -1,0 +1,635 @@
+.\" Man page for acti
+.\" You may distribute under the terms of the GNU General Public
+.\" License as specified in the file COPYING that comes with the man
+.\" distribution.
+.\"
+.TH "acti" "1" "2013-12-22" "0.8" "User Manual"
+
+.SH NAME
+acti \- Activate Apps.
+
+.SH SYNOPSIS
+.B acti <options> <subcommand> <APP>
+
+.SH "REQUIREMENT"
+Dmenu, GNU Sed, Wmctrl
+
+.SH "OPTIONAL"
+Xmessage
+
+.SH DESCRIPTION
+ Acti is a Bash shell script that allows you to activate windows being managed by the window manager or to execute Apps. Currently, it maintains a File of Apps, acts like a kind of application launcher and can resize and move windows of an App at the same time.
+
+.SH "OPTIONS"
+.B
+.IP "--gui\ \ \ "
+Start acti in interactive GUI mode with Dmenus.
+
+.IP \fB-e\fP\fI\ X,Y,W,H\fP
+Activate single window of an App with sizing.
+
+.B
+.IP "-gh\ \ \ \ "
+Arrange horizontaly all windows of an App on current desktop in a grid of equal sizes.
+
+.B
+.IP "-gv\ \ \ \ "
+Arrange verticaly all windows of an App on current desktop in a grid of equal sizes.
+
+.B
+.IP "-m\ \ \ \ \ "
+Maximize all windows of an App on current desktop. In GUI mode the last window is set on top. This option in CLI mode is like the w_action=activate_all, which is default in both modes.
+
+.SH "SUBCOMMANDS"
+.SS CLI & GUI MODE
+.IP \fBgui\fP\fI\ APP\fP
+Execute APP with own options without checking its listing in the App File.
+
+.IP \fBterm\fP\fI\ APP\fP
+Execute APP with own options in a Terminal without checking its listing in the App File.
+
+.IP \fBblock\fP\fI\ APP\fP\&\ .\|.\|.
+Ban Acti from activating and executing APP.
+
+.IP \fBdel\fP\fI\ APP\fP\&\ .\|.\|.
+Delete APP from the App File.
+
+.IP \fBign\fP\fI\ APP\fP\&\ .\|.\|.
+Ban Acti from activating APP, but enable executing APP.
+
+.IP \fBreg\fP\fI\ APP\fP\&\ .\|.\|.
+Insert APP into App File and enable Acti to activate APP.
+
+.IP \fBedit\ apps\fP\fI\ APP\fP
+Execute an Editor and initiate reading the Desktop File of APP. On command line Acti uses the own variable \fB$_editor\fR, else \fB$_visual\fR.
+
+.B
+.IP "edit\ apps\ file"
+ Execute an Editor and initiate reading the App File. On command line Acti uses the own variable \fB$_editor\fR, else \fB$_visual\fR.  
+
+.B
+.IP "build\ dir\ [--new|--re]"
+Read App File and create App Dir on the basis of it. Option '--new' create fully new Desktop Files; the option '--re' only rebuilds the App Dir, so modified Desktop Files are preserved and left over Files will be deleted.
+
+.B
+.IP "build\ file"
+Read App Dir and map its order in App File (directional).
+
+.B
+.IP "dpath\ \ \ "
+Invoke 'dmenu_path'. In GUI mode it is interactive.
+
+.B
+.IP "list\ \ \ "
+List all the windows being managed by the window manager on all desktops. In GUI mode it is interactive and you can select every single window.
+
+.SS CLI MODE only
+.IP \fBconfig\ set\fP\fI\ PATTERN\fP\&\ .\|.\|.\ \fB--\fP\fB\fP\fI\ APP\fP\&\ .\|.\|.
+Set PATTERN in Desktop File with name of APP. PATTERN can be: Encoding, Version, Type, Name, Exec, Terminal (true|false), Path, Geo (X,Y,W,H), W_action (activate_all|maximize|grid_horizontal|grid_vertical).
+
+.IP \fBconfig\ set\fP\fI\ PATTERN\fP\&\ .\|.\|.\ \fB--\fP\fB\fP\fI\ xargs\ COMMAND\fP
+Set PATTERN in all Desktop Files, where COMMAND finds PATTERN. PATTERN can be: Encoding, Version, Type, Name, Exec, Terminal (true|false), Path, Geo (X,Y,W,H), W_action (activate_all|maximize|grid_horizontal|grid_vertical). COMMAND could be something like: egrep -l -e 'PATTERN' ...
+
+.B
+.IP "print\ [-bl|-fm]"
+Print the App File, but edit the status name. Option '-fm' invokes a tabspaced format with header; the option '-bl' invokes a block by block format.
+
+.B
+.IP "show\ apps"
+Print all raw Desktop Files.
+
+.IP \fBshow\ apps\fP\fI\ APP\fP\&\ .\|.\|.
+Print raw Desktop File with name of APP.
+
+.IP \fBshow\ apps\ --\ xargs\fP\fI\ COMMAND\fP
+Print all Desktop Files, where COMMAND finds PATTERN. See: 'config set'.
+
+.B
+.IP "show\ apps\ dir"
+Tree App Dir.
+
+.B
+.IP "show\ apps\ file"
+Print raw App File.
+
+.B
+.IP "show\ history"
+Print raw History File.
+
+.B
+.IP "show\ log"
+Print raw Log File.
+
+.IP \fBwins\ close\fP\fI\ APP\fP
+Close all windows of APP on current desktop.
+
+.IP \fBwins\ move\fP\fI\ DESKTOP\ APP\fP
+Move all windows of APP on current desktop to DESKTOP.
+
+.IP \fBwins\ switch\fP\fI\ DESKTOP\ APP\fP
+Move all windows of APP on current desktop to DESKTOP and switch to DESKTOP.
+
+.B
+.IP "info\ apps"
+Count status of Apps in App File and give an output.
+
+.B
+.IP "info\ version"
+Print version of Acti.
+
+.B
+.IP "help,\ -h,\ --help"
+Display a help.
+
+.SS GUI MODE only
+.B
+.IP "acti\ \ \ "
+Prompt a second Dmenu, where commands can be selected.
+
+.B
+.IP "history"
+Like 'show history', but interactive with a Dmenu.
+
+
+.B
+.IP GRID_HORIZONTAL
+Arranges all windows of an App on current desktop in a grid of equal sizes. Acti begins to tile horizontaly.
+
+.B
+.IP GRID_VERTICAL
+Arranges all windows of an App on current desktop in a grid of equal sizes. Acti begins to tile verticaly.
+
+.B
+.IP MAXIMIZE
+Maximizes all windows of an App on current desktop and sets then the last activated on top.
+
+.B
+.IP CLOSE_ALL
+Closes all windows of an App on current desktop.
+
+.B
+.IP MV_TO_DESKTOP
+Prompts a Dmenu, where \fBMV_AND_SWITCH_TO\fP\fI\ DESKTOP\fP moves all windows of an App on current desktop to another desktop and switches to that desktop. \fBMV_TO_BUT_STAY\fP\fI\ DESKTOP\fP does the same, but without switching to that desktop.
+
+.B
+.IP CYCLE
+Acti reads window identities with "wmctrl -l", which lists all windows in order of mapping/arising. Is there more than one window of an App on current desktop, then their ids are stored in an Array. \fBCYCLE\fP redefines the Array and reorders the strings by putting the last string to the beginning. This way Acti can "reload" the ids without quitting, and in turn that is useful for arranging the arranged windows. Short: Reorders windows. The cycle continues clockwisely.
+
+.SH "EXAMPLES"
+.SS CLI MODE
+.IP \fBacti\ -gh\ -e\fP\fI\ 0,0,1280,400\ thunar\fP
+
+.IP \fBacti\ reg\fP\fI\ thunar\ xterm\ task\ emacs\fP
+
+.IP \fBacti\ block\fP\fI\ claws-mail\fP
+
+.IP \fBacti\ reg\fP\fI\ thunar\ xterm\ task\ emacs\fP\fB\ block\fP\fI\ claws-mail\fP\fB\ ign\fP\fI\ firefox\ vlc\fP
+
+.IP \fBacti\ print\ -fm\fP
+
+.IP \fBacti\ gui\fP\fI\ firefox\ -ProfileManager\fP
+
+.IP \fBacti\ wins\ switch\fP\fI\ 1\ thunar\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Name=taskwarrior\ Exec="task\ next"\fP\fB\ --\fP\fI\ task\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Name=taskwarrior\ Exec="task\ next"\fP\fB\ --\fP\fI\ xargs\ grep\ -l\ -e\ "Name=task"\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Terminal=true\fB\ --\fP\fI\ task\ wyrd\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Terminal=true\fP\fB\ --\fP\fI\ xargs\ egrep\ -l\ -e\ "Terminal=.*"\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Terminal=true\fP\fB\ --\fP\fI\ xargs\ grep\ -l\ -e\ "Terminal="\ -e\ "Terminal=false"\fP
+
+.IP \fBacti\ config\ set\fP\fI\ Terminal=true\fP\fB\ --\fP\fI\ xargs\ grep\ -l\ -e\ "Terminal=false"\ |\ xargs\ grep\ -l\ -e\ "Name=task"\fP
+
+.SS GUI MODE
+Open Acti with \fBacti\ --gui\fP and then:
+.B
+.IP "history"
+
+.IP \fBreg\fP\fI\ thunar\ xterm\ task\ emacs\fP\fB\ block\fP\fI\ claws-mail\fP\fB\ ign\fP\fI\ firefox\ vlc\fP
+
+.B
+.IP \fIthunar\fP
+
+.IP \fBterm\fP\fI\ task\ next\fP
+
+.SH "USAGE"
+First of all fit the parameters in Config File into your position. You need to set \fB$utils_dir\fR, \fB$app_file\fR, \fB$backup_file\fR, \fB$app_dir\fR, \fB$backup_dir\fR and \fB$history_file\fR. Then include minimum one App into the App File. You can mask lines with "block", "ign" or "reg": "block" means, that an App can not be executed or activated; "ign" means, that an App can only be executed, but can not be activated; "reg" means, that an App can be activated. Apps which are not listed in the App File, will not be displayed in Dmenu and can not be entered. To execute those Apps, you can use commands \fBterm\fP and \fBgui\fP. 
+
+After that you can also edit the File in Dmenu or invoke an Editor, too. Further you may edit the App File on command line. If you want to, you may type also several commands in one line to edit the App File.
+
+Then choose or enter any other App in Dmenu. Is there more than one window of an App, Dmenu provides a second selection menu. There you can activate every window separately or size and move all windows of an App on current desktop at the same time. Acti uses "wmctrl -a", so if you choose an App that is on another desktop, first Acti switches to that desktop and then activates the window.
+
+Instead of that, you may type \fBlist\fP in Dmenu and choose between all the windows being managed by the window manager.
+
+Example: You are on desktop 0. You use a shortcut to execute Acti. In Dmenu you type \fIthunar\fP. Then you see, that there are three maximized windows open on desktop 0 and one maximized window open on desktop 1. But you want to see all windows at the same time. So you type/select \fBGRID_VERTICAL\fP. Now you want to change the order of the tiled windows. Type/Select \fBCYCLE\fP and after that \fBGRID_VERTICAL\fP again. The first window is now on second position and the last window on first. You decide on moving the tiled windows on desktop 1. You type/select \fBMV_TO_DESKTOP\fP and then \fBMV_AND_SWITCH_TO \fP\fI\1\fP. Now you stand on desktop 1. You type \fBGRID_VERTICAL\fP again and you can see that the fourth window is tiled too. After all you type/select \fBCLOSE_ALL\fP. All windows of thunar are now killed. You press "Escape" to quit Dmenu \- and Acti.
+
+In CLI mode you may activate an App for example with \fBacti\ -gh\ -e\fP\fI\ 0,0,1280,400\ APP\fP. Is there only one window of APP, that window will be sized before activation; instead all windows of APP will be arranged horizontaly in a grid of equal sizes.
+
+Moreover you can edit the Desktop File of an App and do the sizing and activation without command line arguments. Command line has priority before Desktop File.
+
+.SH "RETURN VALUES"
+.B
+.IP 01
+App File is unset!
+.B
+.IP 02
+There is no App File!
+.B
+.IP 03
+Empty App File exists!
+.B
+.IP 04
+Bye, Bye! No App has been chosen.
+.B
+.IP 05
+App '$app' is blocked!
+.B
+.IP 06
+Could not activate Window!
+.B
+.IP 07
+Could not run App!
+.B
+.IP 08
+Command '${app##* }' does not exist!
+.B
+.IP 09
+(App '${app##* }' has already been edited!) deprecated
+.B
+.IP 10
+Could not run command "edit"!
+.B
+.IP 11
+Could not print App File!
+.B
+.IP 12
+Could not print formatted App File!
+.B
+.IP 13
+Command '${0##*/} $*' is unknown!
+.B
+.IP 14
+Could not create Backup File!
+.B
+.IP 15
+Could not write App File!
+.B
+.IP 16
+Backup File is unset!
+.B
+.IP 17
+(Cache File is unset!) deprecated
+.B
+.IP 18
+(Could not create Cache File!) deprecated
+.B
+.IP 19
+You need to switch to another desktop first!
+.B
+.IP 20
+There is no Config File!
+.B
+.IP 21
+Empty Config File exists!
+.B
+.IP 22
+Config File is unset!
+.B
+.IP 23
+Utils Dir is unset!
+.B
+.IP 24
+There is no Utils Dir!
+.B
+.IP 25
+App Dir is unset!
+.B
+.IP 26
+App Dir has been created!
+.B
+.IP 27
+Invalid syntax!
+.B
+.IP 28
+App '$app' is an ignore case!
+.B
+.IP 29
+App '$app' is not in list!
+.B
+.IP 30
+Could not write History File!
+.B
+.IP 31
+App has no Desktop File!
+.B
+.IP 32
+App '$a' has been deleted!
+.B
+.IP 33
+Added App '$a' is blocked now!
+.B
+.IP 34
+Added App '$a' is ignored now!
+.B
+.IP 35
+App '$a' has been added!
+.B
+.IP 36
+Could not create Backup Dir!
+.B
+.IP 37
+Command '${0##*/} $app' is unknown!
+.B
+.IP 38
+App File has been build!
+.B
+.IP 39
+Could not build App File!
+.B
+.IP 40
+New App Dir has been build!
+.B
+.IP 41
+Could not build new App Dir!
+.B
+.IP 42
+App Dir has been rebuild!
+.B
+.IP 43
+Could not rebuild App Dir!
+.B
+.IP 44
+$l has been set!
+.B
+.IP 45
+Could not set $l!
+.B
+.IP 46
+History File is unset!
+
+.SH "CONFIGURATION FILE"
+In Config File you can set several parameters.
+.B
+.IP "$utils_dir"
+Sets the Utils Dir and is needed. Default is "$HOME/.acti/utils".
+.B
+.IP "$app_file"
+Sets the App File and is needed. Default is "$HOME/.acti/app_file".
+.B
+.IP "$backup_file"
+Sets the Backup File and is needed. Default is "$HOME/.acti/app_file.backup".
+.B
+.IP "$app_dir"
+Sets the App Dir and is needed. Default is "$HOME/.acti/apps".
+.B
+.IP "$backup_dir"
+Sets the Backup Dir and is needed. Default is "$HOME/.acti".
+.B
+.IP "$history_file"
+Sets the History File and is needed. Default is "$HOME/.acti/acti.history".
+.B
+.IP "$_term\ \ \ \ "
+Sets the terminal for the command \fBterm\fP\fI\ APP\fP. You can use something like "xterm -e".
+.B
+.IP "$_editor"
+Sets the editor, which is invoked by command \fBedit\fR. You can use something like "$EDITOR".
+.B
+.IP "$_visual"
+Sets the visual editor, which is invoked by command \fBedit\fR and is used, if  \fB$_editor\fR fails. You can use something like "/usr/bin/geany".
+.B
+.IP $xmessage
+Set this variable, if you want to use Xmessage, too. The value is true or false. Default is false.
+.B
+.IP $xmessage_title
+This option sets the window name/title of Xmessage. Default is "xmessage:acti".
+.B
+.IP "$log_file"
+Set this, if you want to use a Log File. Default should be "$HOME/.acti/acti.log".
+.B
+.IP "$pf_head"
+Is used by the command \fBprint -fm\fR and sets the header. Default is "K1 K2". You can use something like "STATUS APP".
+
+.SS "Dmenu"
+By default all options of Dmenu are unset in Acti. See manpage of Dmenu for all options of your Dmenu version.
+.B
+.IP "$d_opt \ \ \ \ "
+Here you set can several options in one variale. You can use something like '-b -f -i -l 10'.
+.B
+.IP "$d_name"
+You can use something like '-name dmenu'.
+.B
+.IP "$d_class"
+You can use something like '-class dmenu'.
+.B
+.IP "$d_prompt"
+You can use something like '-p GO'.
+.B
+.IP "$d_h \ \ \ \ "
+You can use something like '-h 5'.
+.B
+.IP "$d_w \ \ \ \ "
+You can use something like '-w 1280'.
+.B
+.IP "$d_x \ \ \ \ "
+You can use something like '-x 0'.
+.B
+.IP "$d_y \ \ \ \ "
+You can use something like '-y 0'.
+.B
+.IP "$d_o \ \ \ \ "
+You can use something like '-o 1.0'.
+.B
+.IP "$d_dim \ \ \ \ "
+You can use something like '-dim 1.0'.
+.B
+.IP "$d_dc \ \ \ \ "
+You can use something like '-dc #000000'.
+.B
+.IP '$d_color["d_nb"]'
+You can use something like '-nb #2C2C2C'.
+.B
+.IP '$d_color["d_nf"]'
+You can use something like '-nf #DCDCCC'.
+.B
+.IP '$d_color["d_sb"]'
+You can use something like '-sb #DCDCCC'.
+.B
+.IP '$d_color["d_sf"]'
+You can use something like '-sf #2C2C2C'.
+.B
+.IP "$d_fn \ \ \ \ "
+If your Dmenu has xft support, you can use something like "'Droid Sans Mono-9'".
+.B
+.IP "$menu_1 "
+Modify the first Dmenu in GUI mode. Default is "ACTI". You could use something like "DPATHnewlineHISTORYnewlineLIST"
+.B
+.IP "$menu_2 "
+Modify that Dmenu of the command \fBacti\fP in GUI mode. Default is 'BLOCK X YnewlineBUILD DIR --NEWnewlineBUILD DIR --REnewlineBUILD FILEnewlineDEL X YnewlineDPATHnewlineEDIT APPS XnewlineEDIT APPS FILEnewlineGUI XnewlineHISTORYnewlineIGN X YnewlineLISTnewlineREG X YnewlineTERM X'.
+.B
+.IP "$menu_3 "
+Modify that Dmenu, which is prompted, when an App has more than one window open in GUI mode. Default is 'CYCLEnewlineGRID_HORIZONTALnewlineGRID_VERTICALnewlineMAXIMIZEnewlineCLOSE_ALLnewlineMV_TO_DESKTOP'.
+.B
+.IP "$menu_4 "
+Modify that Dmenu, which is prompted, when you use the command \fBMV_TO_DESKTOP\fP in GUI mode. Default is 'MV_AND_SWITCH_TOnewlineMV_TO_BUT_STAY'.
+
+.SS "Window moving and sizing"
+Set those variables to handle activations of several windows at the same time.
+.B
+.IP "$TOP_MARGIN"
+You can use something like "25".
+.B
+.IP "$BOTTOM_MARGIN"
+You can use something like "0".
+.B
+.IP "$LEFT_MARGIN"
+You can use something like "0".
+.B
+.IP "$RIGHT_MARGIN"
+You can use something like "0".
+.B
+.IP "$TITLE_BAR_HEIGHT"
+Works best, if all windows are border less and the value is set to zero.
+
+.SH "DESKTOP FILES"
+Every App in the App File points to a Desktop File with parameters in the App Dir, which are read when processing. Some command line arguments overwrite these settings. Currently, not all parameters are implemented in Acti. A Desktop File can contain:
+.B
+.IP Encoding=UTF-8
+.B
+.IP Version=1.0
+.B
+.IP Type=Application
+.B
+.IP Name=
+.B
+.IP Exec=
+.B
+.IP Terminal=true/false
+.B
+.IP Path=
+.B
+.IP Geo=X,Y,W,H
+.B
+.IP W_action=activate_all/maximize/grid_horizontal/grid_vertical
+
+.SH "CUSTOMIZATION"
+To integrate Scripts with other Dmenu in Acti, you can modify "acti_custom.sh" in the Utils Dir.
+
+.SH "NOTES"
+.SS Dmenu
+For xft support to Dmenu you need to patch Dmenu. See
+http://tools.suckless.org/dmenu/patches/xft or
+https://bitbucket.org/melek/dmenu2.
+
+See also https://bitbucket.org/rafaelgg/slmenu.
+
+.SS Xmessage
+You can put these options below into \fI$HOME/.Xresources\fR or \fI$HOME/.Xdefaults\fR to edit settings of Xmessage. Then restart X or type "xrdb ~/.Xresources". Maybe you prefer to undecorate the Xmessage Window, so the default name/title is \fBxmessage:acti\fR.
+
+!acti-------------------------------------------------------------------------------
+.br
+!acti*geometry:                     300x60
+.br
+acti*center:                        true
+.br
+acti*nearMouse:                     false
+.br
+acti*printValue:                    false
+.br
+false acti*timeout:                 3
+.br
+!acti*maxHeight
+.br
+!acti*maxWidth
+.br
+acti*background:                    #2C2C2C
+.br
+acti*foreground:                    #DCDCCC
+.br
+acti*Font:                          -*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*
+.br
+!acti*borderWidth:                  1
+.br
+!acti*borderColor:                  black
+.br
+acti*defaultButton:                 quit
+.br
+acti*buttons:                       quit:0
+.br
+acti*.Scrollbar:                    Never
+.br
+!acti*Scrollbar.borderWidth:        0
+.br
+!acti*Scrollbar.width:              0
+.br
+acti*message.scrollVertical:        Never
+.br
+acti*message.scrollHorizontal:      Never
+.br
+!acti*message.background:           #2C2C2C
+.br
+!acti*message.foreground:           #DCDCCC
+.br
+!acti*message.borderColor:          black
+.br
+acti*message.borderWidth:           0
+.br
+!acti*message.font:                 -*-terminus-medium-*-*-*-12-*-*-*-*-*-*-*
+.br
+acti*Command.shapeStyle:            rectangle
+.br
+acti*Command.borderWidth:           0
+.br
+!acti*Command.borderColor:          black
+.br
+!acti*Command.internalWidth:        1
+.br
+!acti*Command.internalHeight:       3
+.br
+acti*Command.highlightThickness:    1
+.br
+!acti*Command.background:           #2C2C2C
+.br
+!acti*Command.foreground:           #2C2C2C
+
+.SH "FILES"
+.IP \fI~/.acti\fR
+The default directory where acti stores its files.
+.IP \fI~/.acti/acti.config\fR
+Default user configuration file.
+
+.SH "BUGS & REQUESTS"
+Post it on http://forum.ubuntuusers.de/topic/starter-auf-dem-desktop-soll-zur-bereits-geoef
+
+.SH "SEE ALSO"
+\fBawk\fR(1),
+\fBbash\fR(1),
+\fBcat\fR(1),
+\fBcolumn\fR(1),
+\fBcp\fR(1),
+\fBcut\fR(1),
+\fBdiff\fR(1),
+\fBdmenu\fR(1),
+\fBfind\fR(1),
+\fBgrep\fR(1),
+\fBmkdir\fR(1),
+\fBmv\fR(1),
+\fBprintf\fR(1),
+\fBsed\fR(1),
+\fBsort(1),
+\fBstat\fR(1),
+\fBtar\fR(1),
+\fBtee\fR(1),
+\fBtest\fR(1),
+\fBtput\fR(1),
+\fBtr\fR(1),
+\fBtree\fR(1),
+\fBuniq\fR(1),
+\fBwc\fR(1),
+\fBwmctrl\fR(1),
+\fBxargs\fR(1),
+\fBxmessage\fR(1),
+\fBxprop\fR(1),
+\fBxwininfo\fR(1)
